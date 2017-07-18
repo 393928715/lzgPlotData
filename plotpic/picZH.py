@@ -220,10 +220,10 @@ class picExcel():
         
         
         #把特立独行和Q因子前10数据导出到CSV
-        self.sTLDX200.to_csv(u'E:/工作/数据备份/tldx200/'+self.time+'.csv',encoding='gbk')
-        self.sQ200.to_csv(u'E:/工作/数据备份/Q200/'+self.time+'.csv',encoding='gbk')
-        tldx200Top.to_csv(u'E:/工作/数据备份/tldx30/'+self.time+'.csv',encoding='gbk')
-        Q200Top.to_csv(u'E:/工作/数据备份/Q30/'+self.time+'.csv',encoding='gbk')        
+#        self.sTLDX200.to_csv(u'E:/工作/数据备份/tldx200/'+self.time+'.csv',encoding='gbk')
+#        self.sQ200.to_csv(u'E:/工作/数据备份/Q200/'+self.time+'.csv',encoding='gbk')
+#        tldx200Top.to_csv(u'E:/工作/数据备份/tldx30/'+self.time+'.csv',encoding='gbk')
+#        Q200Top.to_csv(u'E:/工作/数据备份/Q30/'+self.time+'.csv',encoding='gbk')        
         
                   
         #分板块写股票排名  

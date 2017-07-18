@@ -691,6 +691,7 @@ class PlotToExcel():
         hs300zscol=columns.index('沪深300指数')
         sz50col=columns.index('上证50')
         zz500col=columns.index('中证500')
+        szcol=columns.index('上证指数')
         #gzazcol=columns.index('国证A指')
         cybcol=columns.index('创业板综')
         cxcol=columns.index('次新股')
@@ -768,8 +769,8 @@ class PlotToExcel():
              
         JZ_Sheet.write(top2+4,0,'RF30',title)
         JZ_Sheet.write(top2+5,0,'RF200',title)
-        JZ_Sheet.write(top2+6,0,'国证A指',title)
-        JZ_Sheet.write(top2+7,0,'沪深300',title)
+        JZ_Sheet.write(top2+6,0,'沪深300',title)
+        JZ_Sheet.write(top2+7,0,'国证A指',title)
         
            #写入分析数据
         JZ_Sheet=writecolor(avgChg['30'],top2+4,1,JZ_Sheet)
@@ -796,37 +797,46 @@ class PlotToExcel():
         JZ_Sheet.insert_chart(top2+18,6,xd_chart2)  
         JZ_Sheet.insert_chart(top2+18,16,xd_chart3) 
   
-            #留RF分析位置
-        JZ_Sheet.merge_range(top2+34,0,top2+36,16,'')         
-        
-        #RF个股分析   
-            #RF个股分析的顶部位置
-        top3=76
-        df_rank200=df_rank[0]
-        df_rank30=df_rank[1]
-        JZ_Sheet.merge_range(top3,0,top3,16,'RF个股一周分析',title3)            
-        #写200标的分析    
-        JZ_Sheet.write_row(top3+2,0,['RF200','区间涨幅','大单占比','ATR','融资余额增量','异动级别','综合评分'],title)
-        for row in xrange(len(df_rank30)):#[df_rank.loc[row,'chgper'],df_rank.loc[row,'vbigper'],df_rank.loc[row,'atr']]
-            if not (df_rank200.loc[row,'cFlag']):
-                JZ_Sheet.write(top3+3+row,0,df_rank200.loc[row,'hq_name'],zwyellow)
-                JZ_Sheet.write_row(top3+3+row,1,[df_rank200.loc[row,'chgper'],df_rank200.loc[row,'vbigper']],PER)
-            else:     
-                JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name'],df_rank200.loc[row,'chgper'],df_rank200.loc[row,'vbigper']],PER)
-            JZ_Sheet.write(top3+3+row,3,df_rank200.loc[row,'atr'],zwfloat)
-            JZ_Sheet.write(top3+3+row,4,df_rank200.loc[row,'mt_rzye'],zw)
-            JZ_Sheet.write(top3+3+row,5,df_rank200.loc[row,'fgrade'],zw)
-            JZ_Sheet.write(top3+3+row,6,df_rank200.loc[row,'grade'],zw)
+  
+  
+        if len(df_rank)!=0:
+                #留RF分析位置
+            JZ_Sheet.merge_range(top2+34,0,top2+36,16,'')         
             
+            #RF个股分析   
+                #RF个股分析的顶部位置
+            top3=76
+            df_rank200=df_rank[0]
+            df_rank30=df_rank[1]
+            JZ_Sheet.merge_range(top3,0,top3,16,'RF个股一周分析',title3)            
+            #写200标的分析    
+            JZ_Sheet.write_row(top3+2,0,['RF200','板块','区间涨幅','大单占比','ATR','融资余额增量','异动级别','综合评分'],title)
+            for row in xrange(len(df_rank200)):#[df_rank.loc[row,'chgper'],df_rank.loc[row,'vbigper'],df_rank.loc[row,'atr']]
+                if not (df_rank200.loc[row,'cFlag']):
+                    if row <len(df_rank30):
+                        JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name']],zwyellow)
+                    else:
+                        JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name']],zw)
+                    JZ_Sheet.write_row(top3+3+row,1,[df_rank200.loc[row,'board_name'],df_rank200.loc[row,'chgper'],df_rank200.loc[row,'vbigper']],PER)
+                else:     
+                    JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name'],df_rank200.loc[row,'board_name'],df_rank200.loc[row,'chgper'],df_rank200.loc[row,'vbigper']],PER)
+                JZ_Sheet.write(top3+3+row,4,df_rank200.loc[row,'atr'],zwfloat)
+                JZ_Sheet.write(top3+3+row,5,df_rank200.loc[row,'mt_rzye'],zw)
+                JZ_Sheet.write(top3+3+row,6,df_rank200.loc[row,'fgrade'],zw)
+                JZ_Sheet.write(top3+3+row,7,df_rank200.loc[row,'grade'],zw)
+                
+                
             
-        
-        JZ_Sheet.write_row(top3+2,10,['RF30','区间涨幅','大单占比','ATR','融资余额增量','异动级别','综合评分'],title)
-        for row in xrange(len(df_rank30)):#[df_rank.loc[row,'chgper'],df_rank.loc[row,'vbigper'],df_rank.loc[row,'atr']]
-            JZ_Sheet.write_row(top3+3+row,10,[df_rank30.loc[row,'hq_name'],df_rank30.loc[row,'chgper'],df_rank30.loc[row,'vbigper']],PER)
-            JZ_Sheet.write(top3+3+row,13,df_rank30.loc[row,'atr'],zwfloat)
-            JZ_Sheet.write(top3+3+row,14,df_rank30.loc[row,'mt_rzye'],zw)
-            JZ_Sheet.write(top3+3+row,15,df_rank30.loc[row,'fgrade'],zw)
-            JZ_Sheet.write(top3+3+row,16,df_rank30.loc[row,'grade'],zw)        
+            JZ_Sheet.write_row(top3+2,9,['RF30','板块','区间涨幅','大单占比','ATR','融资余额增量','异动级别','综合评分'],title)
+            for row in xrange(len(df_rank30)):#[df_rank.loc[row,'chgper'],df_rank.loc[row,'vbigper'],df_rank.loc[row,'atr']]
+                try:
+                    JZ_Sheet.write_row(top3+3+row,9,[df_rank30.loc[row,'hq_name'],df_rank30.loc[row,'board_name'],df_rank30.loc[row,'chgper'],df_rank30.loc[row,'vbigper']],PER)
+                    JZ_Sheet.write(top3+3+row,13,df_rank30.loc[row,'atr'],zwfloat)
+                    JZ_Sheet.write(top3+3+row,14,df_rank30.loc[row,'mt_rzye'],zw)
+                    JZ_Sheet.write(top3+3+row,15,df_rank30.loc[row,'fgrade'],zw)
+                    JZ_Sheet.write(top3+3+row,16,df_rank30.loc[row,'grade'],zw)       
+                except:
+                    pass
 #                #净值曲线
 #        jz_chart1=addChart(hs300col,'净值曲线（对比沪深300）',dataLen,750,320,datecol)
 #        jz_chart2=addChart(sz50col,'净值曲线（对比上证50）',dataLen,750,320,datecol)        
