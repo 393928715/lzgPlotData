@@ -810,28 +810,28 @@ class PlotToExcel():
             df_rank30=df_rank[1]
             JZ_Sheet.merge_range(top3,0,top3,16,'RF个股一周分析',title3)            
             #写200标的分析    
-            JZ_Sheet.write_row(top3+2,0,['RF200','板块','区间涨幅','大单占比','ATR','融资余额增量','异动级别','综合评分'],title)
+            JZ_Sheet.write_row(top3+2,0,['RF200','板块','区间涨幅','大单净额','ATR','融资余额增量','异动级别','综合评分'],title)
             for row in xrange(len(df_rank200)):#[df_rank.loc[row,'chgper'],df_rank.loc[row,'vbigper'],df_rank.loc[row,'atr']]
                 if not (df_rank200.loc[row,'cFlag']):
-                    if row <len(df_rank30):
+                    if row <(len(df_rank30)-1):
                         JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name']],zwyellow)
                     else:
                         JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name']],zw)
-                    JZ_Sheet.write_row(top3+3+row,1,[df_rank200.loc[row,'board_name'],df_rank200.loc[row,'chgper'],df_rank200.loc[row,'vbigper']],PER)
+                    JZ_Sheet.write_row(top3+3+row,1,[df_rank200.loc[row,'board_name'],df_rank200.loc[row,'chgper']],PER)
                 else:     
-                    JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name'],df_rank200.loc[row,'board_name'],df_rank200.loc[row,'chgper'],df_rank200.loc[row,'vbigper']],PER)
-                JZ_Sheet.write(top3+3+row,4,df_rank200.loc[row,'atr'],zwfloat)
+                    JZ_Sheet.write_row(top3+3+row,0,[df_rank200.loc[row,'hq_name'],df_rank200.loc[row,'board_name'],df_rank200.loc[row,'chgper']],PER)
+                JZ_Sheet.write_row(top3+3+row,3,[df_rank200.loc[row,'amo'],df_rank200.loc[row,'atr']],zwfloat)
                 JZ_Sheet.write(top3+3+row,5,df_rank200.loc[row,'mt_rzye'],zw)
                 JZ_Sheet.write(top3+3+row,6,df_rank200.loc[row,'fgrade'],zw)
                 JZ_Sheet.write(top3+3+row,7,df_rank200.loc[row,'grade'],zw)
                 
                 
             
-            JZ_Sheet.write_row(top3+2,9,['RF30','板块','区间涨幅','大单占比','ATR','融资余额增量','异动级别','综合评分'],title)
+            JZ_Sheet.write_row(top3+2,9,['RF30','板块','区间涨幅','大单净额','ATR','融资余额增量','异动级别','综合评分'],title)
             for row in xrange(len(df_rank30)):#[df_rank.loc[row,'chgper'],df_rank.loc[row,'vbigper'],df_rank.loc[row,'atr']]
                 try:
-                    JZ_Sheet.write_row(top3+3+row,9,[df_rank30.loc[row,'hq_name'],df_rank30.loc[row,'board_name'],df_rank30.loc[row,'chgper'],df_rank30.loc[row,'vbigper']],PER)
-                    JZ_Sheet.write(top3+3+row,13,df_rank30.loc[row,'atr'],zwfloat)
+                    JZ_Sheet.write_row(top3+3+row,9,[df_rank30.loc[row,'hq_name'],df_rank30.loc[row,'board_name'],df_rank30.loc[row,'chgper']],PER)
+                    JZ_Sheet.write_row(top3+3+row,12,[df_rank30.loc[row,'amo'],df_rank30.loc[row,'atr']],zwfloat)
                     JZ_Sheet.write(top3+3+row,14,df_rank30.loc[row,'mt_rzye'],zw)
                     JZ_Sheet.write(top3+3+row,15,df_rank30.loc[row,'fgrade'],zw)
                     JZ_Sheet.write(top3+3+row,16,df_rank30.loc[row,'grade'],zw)       
@@ -1004,6 +1004,24 @@ class PlotToExcel():
                     print e                  
                 
         wbk.close()
+        
+    
+    def buildCashflow(self,amo_stock,amo_index,period):
+        top=0
+        left=0
+        wbk =xlsxwriter.Workbook(u'E:\\工作\\报表\\资金流\\'+period+'flow.xlsx') 
+        ZJ_Sheet   = wbk.add_worksheet(u'大单效能')
+        for i in xrange(len(amo_index)):
+            ZJ_Sheet.write_row(top+i,left,amo_index.iloc[i])
+        
+        for board in amo_index:
+            tmpstock=amo_stock[amo_stock.board_name==board]
+            left+6
+            for i in xrange(len(tmpstock)):
+                ZJ_Sheet.write_row(top+i,left,tmpstock.iloc[i])
+               
+        wbk.close()
+            
     
     
     #excel中plot相对指数强弱图形
